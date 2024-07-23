@@ -12,3 +12,14 @@ func Sum(arr []int) int {
 
 	return result
 }
+
+func SumAll(numsToSum ...[]int) []int {
+	var length int = len(numsToSum)
+	var result []int = make([]int, length)
+
+	for i, nums := range numsToSum {
+		result[i] = Sum(nums)
+	}
+
+	return result
+}
