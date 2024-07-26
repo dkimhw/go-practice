@@ -2,8 +2,11 @@ package structs
 
 import "math"
 
-// A struct is just a named collection of fields where you can store data.
+type Shape interface {
+	Area() float64
+}
 
+// A struct is just a named collection of fields where you can store data.
 type Rectangle struct {
 	Width  float64
 	Height float64
