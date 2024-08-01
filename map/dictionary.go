@@ -26,8 +26,9 @@ Which ensures that you will never get a runtime panic.
 type DictionaryErr string
 
 const (
-	ErrNotFound   = DictionaryErr("could not find the word you were looking for")
-	ErrWordExists = DictionaryErr("cannot add word because it already exists")
+	ErrNotFound         = DictionaryErr("could not find the word you were looking for")
+	ErrWordExists       = DictionaryErr("cannot add word because it already exists")
+	ErrWordDoesNotExist = DictionaryErr("cannot update/delete word because it does not exist")
 )
 
 func (e DictionaryErr) Error() string {
@@ -59,4 +60,34 @@ func (d Dictionary) Add(word, definition string) error {
 	}
 
 	return nil
+}
+
+func (d Dictionary) Update(word, newDefinition string) error {
+	// prevent new words from being added
+	_, err := d.Search(word)
+
+	if err == nil {
+		d[word] = newDefinition
+		return nil
+	}
+
+	if err == ErrNotFound {
+		return ErrWordDoesNotExist
+	}
+
+	return err
+}
+
+func (d Dictionary) Delete(word string) error {
+	_, err := d.Search(word)
+
+	if err == ErrNotFound {
+		return ErrWordDoesNotExist
+	}
+
+	if err == nil {
+		delete(d, word)
+	}
+
+	return err
 }
