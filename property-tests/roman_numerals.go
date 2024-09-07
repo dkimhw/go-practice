@@ -1,12 +1,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
 
+var errorMsg string = "please enter a value greater than 0 and leass than 3999"
+
 type RomanNumeral struct {
-	Value  int
+	Value  uint16
 	Symbol string
 }
 
@@ -26,7 +29,11 @@ var allRomanNumerals = []RomanNumeral{
 	{1, "I"},
 }
 
-func ConvertToRoman(arabic int) string {
+func ConvertToRoman(arabic uint16) (string, error) {
+	if arabic > 3999 || arabic <= 0 {
+		return "", errors.New(errorMsg)
+	}
+
 	var result strings.Builder
 
 	for _, numeral := range allRomanNumerals {
@@ -36,11 +43,11 @@ func ConvertToRoman(arabic int) string {
 		}
 	}
 
-	return result.String()
+	return result.String(), nil
 }
 
-func ConvertToArabic(roman string) int {
-	var arabic = 0
+func ConvertToArabic(roman string) uint16 {
+	var arabic uint16 = 0
 
 	for _, numeral := range allRomanNumerals {
 		for strings.HasPrefix(roman, numeral.Symbol) {
@@ -53,5 +60,5 @@ func ConvertToArabic(roman string) int {
 }
 
 func main() {
-	fmt.Println(ConvertToRoman(1))
+	fmt.Println(ConvertToRoman(4000))
 }
